@@ -19,7 +19,7 @@ const ordersData = [
   { id: 101, product: "Drug A", status: "Shipped", date: "2025-03-15" },
   { id: 102, product: "Drug B", status: "Processing", date: "2025-03-16" },
   { id: 103, product: "Drug C", status: "Delivered", date: "2025-03-14" },
-  { id: 104, product: "Drug D", status: "Shipped", date: "2025-03-13" },
+  { id: 104, product: "Drug D", status: "Processing", date: "2025-03-13" },
 ];
 
 const trendsData = {

@@ -3,8 +3,9 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Panel } from "@ui5/webcomponents-react";
 import { LineChart } from "@ui5/webcomponents-react-charts";
+import { ThemingParameters } from "@ui5/webcomponents-react-base";
 
-export default function TrendsPanel() {
+function TrendsPanel() {
   const [trendData, setTrendData] = useState({ labels: [], values: [] });
 
   useEffect(() => {
@@ -14,7 +15,6 @@ export default function TrendsPanel() {
       .catch((error) => console.error("Error fetching trend data:", error));
   }, []);
 
-  // Transform data for the chart
   const chartData = trendData.labels.map((label, index) => ({
     month: label,
     value: trendData.values[index],
@@ -25,6 +25,9 @@ export default function TrendsPanel() {
     measures: [{ accessor: "value", title: "Stock Level" }],
   };
 
+  // Use a theming parameter for the line color so it updates with the theme.
+  const lineColor = ThemingParameters.sapHighlightColor || "#0a6ed1";
+
   return (
     <Panel headerText="Supply Chain Trends" style={{ width: "100%" }}>
       <LineChart
@@ -32,7 +35,7 @@ export default function TrendsPanel() {
         dimensions={chartConfig.dimensions}
         measures={chartConfig.measures}
         chartConfig={{
-          color: ["#0a6ed1"], // custom line color
+          color: [lineColor],
           yAxisVisible: true,
           xAxisVisible: true,
         }}
@@ -41,3 +44,6 @@ export default function TrendsPanel() {
     </Panel>
   );
 }
+
+// Optionally, memoize the component to avoid unnecessary re-renders
+export default React.memo(TrendsPanel);
