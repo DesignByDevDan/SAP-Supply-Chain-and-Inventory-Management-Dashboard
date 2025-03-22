@@ -1,6 +1,5 @@
 // src/components/InventoryPanel.js
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React from "react";
 import {
   Panel,
   Table,
@@ -8,28 +7,22 @@ import {
   TableCell,
   Title,
 } from "@ui5/webcomponents-react";
+import { useInventory } from "../hooks/useInventory";
 
-export default function InventoryPanel() {
-  const [inventory, setInventory] = useState([]);
-
-  useEffect(() => {
-    axios
-      .get("http://localhost:5001/api/inventory")
-      .then((response) => {
-        console.log("Inventory data:", response.data);
-        setInventory(response.data);
-      })
-      .catch((error) => console.error("Error fetching inventory:", error));
-  }, []);
+export default function InventoryPanel({ searchTerm }) {
+  const inventory = useInventory();
 
   const columns = [{ header: "Product" }, { header: "Stock Level" }];
 
+  // Filter inventory by product name if searchTerm is not empty
+  const filteredInventory = inventory.filter((item) =>
+    item.product.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <Panel headerText="Inventory Overview" style={{ width: "100%" }}>
-      <Table
-        columns={columns}
-        items={inventory}
-        renderRow={(item) => {
+      <Table columns={columns}>
+        {filteredInventory.map((item) => {
           const isLowStock = item.stock < 50;
           const rowStyle = {
             backgroundColor: isLowStock ? "#ffe6e6" : "inherit",
@@ -51,8 +44,8 @@ export default function InventoryPanel() {
               </TableCell>
             </TableRow>
           );
-        }}
-      />
+        })}
+      </Table>
     </Panel>
   );
 }
